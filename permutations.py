@@ -2,22 +2,36 @@ from typing import List
 
 
 def permute(self, nums: List[int]) -> List[List[int]]:
-    output = []
+    # initialize results
+    results = []
+    # initialize tracking for used numbers
+    used = [False] * len(nums)
 
-    def find_combo(combo, used):
-        if len(combo) == len(nums):
-            output.append(combo[:])
+    # define the backtrack function
+    def find_combo(path=[]):
+        # base case
+        if len(path) == len(nums):
+            results.append(path[:])
             return
 
+        # loop through possibilites
         for i in range(len(nums)):
+            # check if used, if so move on
             if used[i]:
                 continue
+
+            # let's make sure we don't use this one again for this track
             used[i] = True
-            combo.append(nums[i])
-            find_combo(combo, used)
+            # let's add it to the path
+            path.append(nums[i])
+
+            # run through the remaining combos
+            find_combo(path)
+
+            # backtrack the path options for the next loop
+            path.pop()
             used[i] = False
-            combo.pop()
 
-    find_combo([], [False] * len(nums))
+    find_combo([])
 
-    return output
+    return results
